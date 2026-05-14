@@ -1,42 +1,15 @@
-from telegram import Update
-from telegram.ext import (
-    Application,
-    CommandHandler,
-    MessageHandler,
-    filters,
-    ContextTypes,
-)
+from telegram.ext import Application, CommandHandler
+import os
 
-BOT_TOKEN = "8613274805:AAFTtxg-qWu-bFu68EjLOXz2Q7Lo3ymqgMs"
+BOT_TOKEN = os.getenv("8613274805:AAFTtxg-qWu-bFu68EjLOXz2Q7Lo3ymqgMs")
 
+async def start(update, context):
+    await update.message.reply_text("Bot running successfully!")
 
-# START COMMAND
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text(
-        "✅ AI Telegram Bot Online Hai!"
-    )
+app = Application.builder().token(BOT_TOKEN).build()
 
+app.add_handler(CommandHandler("start", start))
 
-# MESSAGE REPLY
-async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user_text = update.message.text
+print("BOT STARTED...")
 
-    reply = f"🤖 Tumne kaha:\n{user_text}"
-
-    await update.message.reply_text(reply)
-
-
-# MAIN FUNCTION
-def main():
-    app = Application.builder().token(BOT_TOKEN).build()
-
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, chat))
-
-    print("BOT RUNNING...")
-
-    app.run_polling()
-
-
-if __name__ == "__main__":
-    main()
+app.run_polling()
